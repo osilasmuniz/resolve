@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  LaunchAgent: runs start_session.sh at each user login.
+  A LaunchAgent (not a Daemon) is used on purpose: it runs inside the logged-in
+  user session, which is what lets the consent dialog appear and what scopes the
+  timer to that customer's session. launchd sends SIGTERM at logout/shutdown,
+  which triggers the final log + email in usage_tracker.py.
+
+  Install to:  /Library/LaunchAgents/com.axlegal.usagetracker.plist
+  Owner:       root:wheel   Perms: 644
+  Edit the path in <string> below to where you copied the project folder.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.axlegal.usagetracker</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Library/Application Support/LanHouseTracker/app/start_session.sh</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- Restart if it dies mid-session so billing keeps counting. -->
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>StandardErrorPath</key>
+    <string>/Library/Application Support/LanHouseTracker/tracker.err.log</string>
+</dict>
+</plist>
