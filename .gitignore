@@ -1,2 +1,6 @@
 __pycache__/
 *.pyc
+
+# Telegram bot: secrets and data
+telegram-bot/config.ini
+telegram-bot/*.xlsx
