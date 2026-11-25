@@ -54,7 +54,16 @@ def load_config():
         sys.exit("config.ini not found. Copy config.example.ini to config.ini "
                  "and fill in your bot token (see README.md).")
     cfg = configparser.ConfigParser()
-    cfg.read(CONFIG_FILE, encoding="utf-8")
+    try:
+        # utf-8-sig also accepts files Notepad saved "UTF-8 with BOM"
+        cfg.read(CONFIG_FILE, encoding="utf-8-sig")
+    except (configparser.Error, UnicodeDecodeError):
+        cfg = None
+    if cfg is None or "bot" not in cfg:
+        sys.exit("config.ini is empty or not in the expected layout.\n"
+                 "Open config.example.ini, copy ALL of its text into config.ini, "
+                 "paste your token on the 'token =' line, and save "
+                 "(Notepad: Save as -> Encoding: UTF-8).")
     s = cfg["bot"]
     token = s.get("token", "").strip()
     if not token or token.startswith("PASTE"):
